@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:todo/ui/screens/home/tabs/list/todo.dart';
 import 'package:todo/ui/utils/date_time_extension.dart';
 import '../../../../../model/todo_dm.dart';
+import '../../../../../model/user_dm.dart';
 import '../../../../utils/app_colors.dart';
 import '../../../../utils/app_style.dart';
 
@@ -101,7 +102,10 @@ class ListTabState extends State<ListTab> {
 
   void getTodosListFromFireStore() async {
     CollectionReference todoCollection =
-        FirebaseFirestore.instance.collection(TodoDM.collectionName);
+    FirebaseFirestore.instance
+        .collection(UserDM.collectionName)
+        .doc(UserDM.currentUser!.id)
+        .collection(TodoDM.collectionName);
     QuerySnapshot querySnapshot = await todoCollection.get();
     List<QueryDocumentSnapshot> documents = querySnapshot.docs;
     todosList = documents.map((doc) {

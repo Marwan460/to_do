@@ -7,8 +7,8 @@ abstract class AppColors{
   static const Color bgColor = Color(0xFFDFECDB);
 
   /// Dark
-  static const Color bgDark = Color(0xFF1E1E1E);
-  static const Color black = Colors.black;
+  static const Color bgDark = Color(0xFF060E1E);
+  static const Color black = Color(0xff141922);
 
 
 }

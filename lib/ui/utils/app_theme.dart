@@ -47,6 +47,9 @@ abstract class AppTheme {
           unselectedItemColor: AppColors.white,
           selectedIconTheme: IconThemeData(size: 33),
           unselectedIconTheme: IconThemeData(size: 33,color: AppColors.grey)
-      )
+      ),
+    bottomSheetTheme: const BottomSheetThemeData(
+      backgroundColor: AppColors.black,
+    ) ,
   );
 }

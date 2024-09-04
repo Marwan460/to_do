@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:todo/model/user_dm.dart';
 import 'package:todo/ui/screens/home/tabs/list/list_tab.dart';
 import 'package:todo/ui/screens/home/tabs/setting.dart';
 import '../../utils/app_colors.dart';
@@ -9,7 +10,6 @@ class Home extends StatefulWidget {
   static const String routeName = "home";
 
   const Home({super.key});
-
   @override
   State<Home> createState() => _HomeState();
 }
@@ -34,7 +34,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("To Do List", style: AppStyle.appBarStyle),
+        title:  Text("Welcome ${UserDM.currentUser!.userName}", style: AppStyle.appBarStyle),
       ),
       body: tabs[currentIndex],
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

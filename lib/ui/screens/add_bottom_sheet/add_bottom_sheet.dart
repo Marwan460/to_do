@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:todo/model/todo_dm.dart';
+import 'package:todo/model/user_dm.dart';
 import 'package:todo/ui/utils/date_time_extension.dart';
 import '../../utils/app_style.dart';
 
@@ -87,8 +88,10 @@ class _AddBottomSheetState extends State<AddBottomSheet> {
   }
 
   void addTodoToFireStore() {
-    CollectionReference todosCollection =
-        FirebaseFirestore.instance.collection(TodoDM.collectionName);
+    CollectionReference todosCollection = FirebaseFirestore.instance
+        .collection(UserDM.collectionName)
+        .doc(UserDM.currentUser!.id)
+        .collection(TodoDM.collectionName);
     DocumentReference doc = todosCollection.doc();
     TodoDM todoDM = TodoDM(
         id: doc.id,
@@ -98,10 +101,9 @@ class _AddBottomSheetState extends State<AddBottomSheet> {
         date: selectedDate);
     doc.set(todoDM.toJason()).then((_) {
       /// this callback is called when future is completed
+      Navigator.pop(context);
     }).onError((error, stackTrack) {
       /// this callback is called when the future throws an exception
-    }).timeout(const Duration(milliseconds: 500), onTimeout: () {
-      Navigator.pop(context);
-    });
+    }).timeout(const Duration(milliseconds: 500), onTimeout: () {});
   }
 }
