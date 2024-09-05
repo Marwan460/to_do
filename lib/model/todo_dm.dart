@@ -5,15 +5,14 @@ class TodoDM {
   late String id;
   late String title;
   late String description;
-  late bool isDone;
+  late bool? isDone;
   late DateTime date;
 
-  TodoDM(
-      {required this.id,
-      required this.title,
-      required this.description,
-      required this.isDone,
-      required this.date});
+  TodoDM({ required this.id,
+    required this.title,
+    required this.description,
+    this.isDone = false,
+    required this.date});
 
   TodoDM.fromJson(Map<String, dynamic> json){
     id = json["id"];

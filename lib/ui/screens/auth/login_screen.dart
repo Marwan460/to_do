@@ -37,51 +37,53 @@ class _LoginScreenState extends State<LoginScreen> {
   buildLoginScreenBody() {
     return Padding(
       padding: const EdgeInsets.all(14),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          SizedBox(height: MediaQuery.of(context).size.height * .25),
-          Text("Welcome back !",
-              style: AppStyle.titlesTextStyle.copyWith(color: Colors.black)),
-          TextFormField(
-            onChanged: (text) {
-              email = text;
-            },
-            decoration: const InputDecoration(
-              label: Text("Email"),
-            ),
-          ),
-          const SizedBox(height: 8),
-          TextFormField(
-            onChanged: (text) {
-              password = text;
-            },
-            decoration: const InputDecoration(
-              label: Text("Password"),
-            ),
-          ),
-          const SizedBox(height: 26),
-          ElevatedButton(
-              onPressed: () {
-                signIn();
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SizedBox(height: MediaQuery.of(context).size.height * .25),
+            Text("Welcome back !",
+                style: AppStyle.titlesTextStyle.copyWith(color: Colors.black)),
+            TextFormField(
+              onChanged: (text) {
+                email = text;
               },
-              child: const Padding(
-                padding: EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-                child: Row(
-                  children: [
-                    Text("Login"),
-                    Spacer(),
-                    Icon(Icons.arrow_forward)
-                  ],
-                ),
-              )),
-          const SizedBox(height: 18),
-          InkWell(
-              onTap: () {
-                Navigator.pushNamed(context, RegisterScreen.routeName);
+              decoration: const InputDecoration(
+                label: Text("Email"),
+              ),
+            ),
+            const SizedBox(height: 8),
+            TextFormField(
+              onChanged: (text) {
+                password = text;
               },
-              child: const Text("Create account")),
-        ],
+              decoration: const InputDecoration(
+                label: Text("Password"),
+              ),
+            ),
+            const SizedBox(height: 26),
+            ElevatedButton(
+                onPressed: () {
+                  signIn();
+                },
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+                  child: Row(
+                    children: [
+                      Text("Login"),
+                      Spacer(),
+                      Icon(Icons.arrow_forward)
+                    ],
+                  ),
+                )),
+            const SizedBox(height: 18),
+            InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, RegisterScreen.routeName);
+                },
+                child: const Text("Create account")),
+          ],
+        ),
       ),
     );
   }
@@ -110,8 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
         showMessage(context,
             title: "Error", body: message, posButtonTitle: "ok");
       }
-    } catch (e, stackTrace) {
-      print("Catching error: ${e} - $stackTrace");
+    } catch (e) {
       if (context.mounted) {
         hideLoading(context);
         showMessage(context,

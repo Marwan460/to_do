@@ -114,9 +114,9 @@ class ListTabState extends State<ListTab> {
     }).toList();
     todosList = todosList
         .where((todo) =>
-            todo.date.year == selectedCalenderDate.year &&
-            todo.date.month == selectedCalenderDate.month &&
-            todo.date.day == selectedCalenderDate.day)
+            todo.date?.year == selectedCalenderDate.year &&
+            todo.date?.month == selectedCalenderDate.month &&
+            todo.date?.day == selectedCalenderDate.day)
         .toList();
     setState(() {});
   }
