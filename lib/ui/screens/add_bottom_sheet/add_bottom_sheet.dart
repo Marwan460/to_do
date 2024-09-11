@@ -90,11 +90,11 @@ class _AddBottomSheetState extends State<AddBottomSheet> {
   void addTodoToFireStore() {
     CollectionReference todosCollection = FirebaseFirestore.instance
         .collection(UserDM.collectionName)
-        .doc(UserDM.currentUser!.id)
+        .doc(UserDM.currentUser!.userId)
         .collection(TodoDM.collectionName);
     DocumentReference doc = todosCollection.doc();
     TodoDM todoDM = TodoDM(
-        id: doc.id,
+        taskId: doc.id,
         title: titleController.text,
         description: descriptionController.text,
         isDone: false,

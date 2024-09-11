@@ -100,7 +100,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         email: email,
         password: password,
       );
-      UserDM.currentUser = UserDM(id: credential.user!.uid, email: email, userName: userName);
+      UserDM.currentUser = UserDM(
+          userId: credential.user!.uid, email: email, userName: userName);
       registerUserInFireStore(UserDM.currentUser!);
       if (context.mounted) {
         hideLoading(context);
@@ -134,7 +135,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   void registerUserInFireStore(UserDM user) async {
     CollectionReference collectionReference =
         FirebaseFirestore.instance.collection(UserDM.collectionName);
-    DocumentReference userDoc = collectionReference.doc(user.id);
+    DocumentReference userDoc = collectionReference.doc(user.userId);
     await userDoc.set(user.toJson());
   }
 }

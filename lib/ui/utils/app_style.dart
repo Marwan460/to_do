@@ -14,7 +14,7 @@ abstract class AppStyle {
       fontSize: 18, fontWeight: FontWeight.w700, color: AppColors.primary);
 
   static const TextStyle bodyTextStyle = TextStyle(
-      fontSize: 12, fontWeight: FontWeight.w600, color: AppColors.black);
+      fontSize: 14, fontWeight: FontWeight.w600, color: AppColors.black);
 
   static const TextStyle appBarDarkStyle = TextStyle(
       fontSize: 30, fontWeight: FontWeight.bold, color: AppColors.black);

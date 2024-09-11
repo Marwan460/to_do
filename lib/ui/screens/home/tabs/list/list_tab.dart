@@ -35,7 +35,7 @@ class ListTabState extends State<ListTab> {
           child: ListView.builder(
               itemCount: todosList.length,
               itemBuilder: (context, index) {
-                return Todo(item: todosList[index]);
+                return Todo(task: todosList[index]);
               }),
         )
       ],
@@ -104,7 +104,7 @@ class ListTabState extends State<ListTab> {
     CollectionReference todoCollection =
     FirebaseFirestore.instance
         .collection(UserDM.collectionName)
-        .doc(UserDM.currentUser!.id)
+        .doc(UserDM.currentUser!.userId)
         .collection(TodoDM.collectionName);
     QuerySnapshot querySnapshot = await todoCollection.get();
     List<QueryDocumentSnapshot> documents = querySnapshot.docs;
@@ -114,9 +114,9 @@ class ListTabState extends State<ListTab> {
     }).toList();
     todosList = todosList
         .where((todo) =>
-            todo.date?.year == selectedCalenderDate.year &&
-            todo.date?.month == selectedCalenderDate.month &&
-            todo.date?.day == selectedCalenderDate.day)
+            todo.date.year == selectedCalenderDate.year &&
+            todo.date.month == selectedCalenderDate.month &&
+            todo.date.day == selectedCalenderDate.day)
         .toList();
     setState(() {});
   }
