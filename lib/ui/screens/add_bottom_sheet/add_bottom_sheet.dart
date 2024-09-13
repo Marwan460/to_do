@@ -104,6 +104,6 @@ class _AddBottomSheetState extends State<AddBottomSheet> {
       Navigator.pop(context);
     }).onError((error, stackTrack) {
       /// this callback is called when the future throws an exception
-    }).timeout(const Duration(milliseconds: 500), onTimeout: () {});
+    });
   }
 }

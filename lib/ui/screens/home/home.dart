@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:todo/model/user_dm.dart';
 import 'package:todo/ui/screens/home/tabs/list/list_tab.dart';
 import 'package:todo/ui/screens/home/tabs/setting.dart';
+import 'package:todo/ui/utils/todo_dao.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_style.dart';
+import '../../utils/todo_dao.dart';
 import '../add_bottom_sheet/add_bottom_sheet.dart';
 
 class Home extends StatefulWidget {
@@ -18,6 +20,7 @@ class _HomeState extends State<Home> {
   int currentIndex = 0;
   GlobalKey<ListTabState> listTabKey = GlobalKey();
   List<Widget> tabs = [];
+  late TodoDao todoDao;
 
   @override
   void initState() {
@@ -67,7 +70,7 @@ class _HomeState extends State<Home> {
   buildFab() => FloatingActionButton(
         onPressed: () async {
           await AddBottomSheet.show(context);
-          listTabKey.currentState?.getTodosListFromFireStore();
+          listTabKey.currentState?.TodoDao.getTodosListFromFireStore();
         },
         backgroundColor: AppColors.primary,
         shape: const StadiumBorder(

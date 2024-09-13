@@ -3,6 +3,7 @@ import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:todo/ui/screens/home/tabs/list/todo.dart';
 import 'package:todo/ui/utils/date_time_extension.dart';
+import 'package:todo/ui/utils/todo_dao.dart';
 import '../../../../../model/todo_dm.dart';
 import '../../../../../model/user_dm.dart';
 import '../../../../utils/app_colors.dart';
@@ -22,7 +23,7 @@ class ListTabState extends State<ListTab> {
   @override
   void initState() {
     super.initState();
-    getTodosListFromFireStore();
+    TodoDao.getTodosListFromFireStore();
   }
 
   @override
@@ -67,7 +68,7 @@ class ListTabState extends State<ListTab> {
                 return InkWell(
                   onTap: () {
                       selectedCalenderDate = date;
-                      getTodosListFromFireStore();
+                    TodoDao.getTodosListFromFireStore();
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -98,26 +99,5 @@ class ListTabState extends State<ListTab> {
         ],
       ),
     );
-  }
-
-  void getTodosListFromFireStore() async {
-    CollectionReference todoCollection =
-    FirebaseFirestore.instance
-        .collection(UserDM.collectionName)
-        .doc(UserDM.currentUser!.userId)
-        .collection(TodoDM.collectionName);
-    QuerySnapshot querySnapshot = await todoCollection.get();
-    List<QueryDocumentSnapshot> documents = querySnapshot.docs;
-    todosList = documents.map((doc) {
-      Map<String, dynamic> json = doc.data() as Map<String, dynamic>;
-      return TodoDM.fromJson(json);
-    }).toList();
-    todosList = todosList
-        .where((todo) =>
-            todo.date.year == selectedCalenderDate.year &&
-            todo.date.month == selectedCalenderDate.month &&
-            todo.date.day == selectedCalenderDate.day)
-        .toList();
-    setState(() {});
   }
 }

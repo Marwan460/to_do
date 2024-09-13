@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:todo/ui/screens/auth/login_screen.dart';
 import 'package:todo/ui/screens/auth/register_screen.dart';
+import 'package:todo/ui/screens/edit_task/edit_task.dart';
 import 'package:todo/ui/screens/home/home.dart';
 import 'package:todo/ui/utils/app_theme.dart';
 import 'firebase_options.dart';
@@ -46,6 +47,7 @@ class _MyAppState extends State<MyApp> {
         Home.routeName: (_) => const Home(),
         LoginScreen.routeName: (_) => const LoginScreen(),
         RegisterScreen.routeName: (_) => const RegisterScreen(),
+        EditTask.routeName: (_) => const EditTask(),
       },
       initialRoute: LoginScreen.routeName,
     );
