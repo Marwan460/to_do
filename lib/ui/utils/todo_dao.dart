@@ -1,34 +1,42 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import '../../model/todo_dm.dart';
 import '../../model/user_dm.dart';
 
 abstract class TodoDao {
-  static void getTodosListFromFireStore() async {
-    List<TodoDM> todosList = [];
-    CollectionReference todoCollection = FirebaseFirestore.instance
+  TodoDao();
+
+  static Future<void> showMyDatePicker(BuildContext context) async {
+    DateTime selectedDate = DateTime.now();
+    selectedDate = await showDatePicker(
+            context: context,
+            initialDate: selectedDate,
+            firstDate: DateTime.now(),
+            lastDate: DateTime.now().add(const Duration(days: 365))) ??
+        selectedDate;
+  }
+
+  static void addTodoToFireStore(
+      BuildContext context,
+      TextEditingController titleController,
+      TextEditingController descriptionController) {
+    DateTime selectedDate = DateTime.now();
+    CollectionReference todosCollection = FirebaseFirestore.instance
         .collection(UserDM.collectionName)
         .doc(UserDM.currentUser!.userId)
         .collection(TodoDM.collectionName);
-    QuerySnapshot querySnapshot = await todoCollection.get();
-    List<QueryDocumentSnapshot> documents = querySnapshot.docs;
-    todosList = documents.map((doc) {
-      Map<String, dynamic> json = doc.data() as Map<String, dynamic>;
-      return TodoDM.fromJson(json);
-    }).toList();
-    var selectedCalenderDate;
-    todosList = todosList
-        .where((todo) =>
-            todo.date.year == selectedCalenderDate?.year &&
-            todo.date.month == selectedCalenderDate?.month &&
-            todo.date.day == selectedCalenderDate?.day)
-        .toList();
-  }
-
-  static Future<void> editIsDone(
-      String itemId, Map<String, dynamic> updates) async {
-    CollectionReference taskCollection =
-        FirebaseFirestore.instance.collection(UserDM.collectionName);
-    var taskDoc = taskCollection.doc(itemId);
-    await taskDoc.update(updates);
+    DocumentReference doc = todosCollection.doc();
+    TodoDM todoDM = TodoDM(
+        taskId: doc.id,
+        title: titleController.text,
+        description: descriptionController.text,
+        isDone: false,
+        date: selectedDate);
+    doc.set(todoDM.toJason()).then((_) {
+      /// this callback is called when future is completed
+      Navigator.pop(context);
+    }).onError((error, stackTrack) {
+      /// this callback is called when the future throws an exception
+    });
   }
 }

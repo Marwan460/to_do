@@ -5,7 +5,6 @@ import 'package:todo/ui/screens/home/tabs/setting.dart';
 import 'package:todo/ui/utils/todo_dao.dart';
 import '../../utils/app_colors.dart';
 import '../../utils/app_style.dart';
-import '../../utils/todo_dao.dart';
 import '../add_bottom_sheet/add_bottom_sheet.dart';
 
 class Home extends StatefulWidget {
@@ -70,7 +69,7 @@ class _HomeState extends State<Home> {
   buildFab() => FloatingActionButton(
         onPressed: () async {
           await AddBottomSheet.show(context);
-          listTabKey.currentState?.TodoDao.getTodosListFromFireStore();
+          listTabKey.currentState?.getTodosListFromFireStore();
         },
         backgroundColor: AppColors.primary,
         shape: const StadiumBorder(

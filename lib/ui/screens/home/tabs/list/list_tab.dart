@@ -3,7 +3,6 @@ import 'package:easy_date_timeline/easy_date_timeline.dart';
 import 'package:flutter/material.dart';
 import 'package:todo/ui/screens/home/tabs/list/todo.dart';
 import 'package:todo/ui/utils/date_time_extension.dart';
-import 'package:todo/ui/utils/todo_dao.dart';
 import '../../../../../model/todo_dm.dart';
 import '../../../../../model/user_dm.dart';
 import '../../../../utils/app_colors.dart';
@@ -23,7 +22,7 @@ class ListTabState extends State<ListTab> {
   @override
   void initState() {
     super.initState();
-    TodoDao.getTodosListFromFireStore();
+    getTodosListFromFireStore();
   }
 
   @override
@@ -36,7 +35,10 @@ class ListTabState extends State<ListTab> {
           child: ListView.builder(
               itemCount: todosList.length,
               itemBuilder: (context, index) {
-                return Todo(task: todosList[index]);
+                return Todo(
+                  task: todosList[index],
+                  delete: deleteTask,
+                );
               }),
         )
       ],
@@ -67,8 +69,8 @@ class ListTabState extends State<ListTab> {
               itemBuilder: (context, date, isSelected, onTap) {
                 return InkWell(
                   onTap: () {
-                      selectedCalenderDate = date;
-                    TodoDao.getTodosListFromFireStore();
+                    selectedCalenderDate = date;
+                    getTodosListFromFireStore();
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -99,5 +101,37 @@ class ListTabState extends State<ListTab> {
         ],
       ),
     );
+  }
+
+  Future<List<TodoDM>> getTodosListFromFireStore() async {
+    CollectionReference todoCollection = FirebaseFirestore.instance
+        .collection(UserDM.collectionName)
+        .doc(UserDM.currentUser!.userId)
+        .collection(TodoDM.collectionName);
+    QuerySnapshot querySnapshot = await todoCollection.get();
+    List<QueryDocumentSnapshot> documents = querySnapshot.docs;
+    todosList = documents.map((doc) {
+      Map<String, dynamic> json = doc.data() as Map<String, dynamic>;
+      return TodoDM.fromJson(json);
+    }).toList();
+    todosList = todosList
+        .where((todo) =>
+            todo.date.year == selectedCalenderDate.year &&
+            todo.date.month == selectedCalenderDate.month &&
+            todo.date.day == selectedCalenderDate.day)
+        .toList();
+    setState(() {});
+    return todosList;
+  }
+
+  Future<void> deleteTask(String taskId) async {
+    CollectionReference taskCollection = FirebaseFirestore.instance
+        .collection(UserDM.collectionName)
+        .doc(UserDM.currentUser!.userId)
+        .collection(TodoDM.collectionName);
+    var taskDoc = taskCollection.doc(taskId);
+    await taskDoc.delete();
+    todosList = await getTodosListFromFireStore();
+    setState(() {});
   }
 }

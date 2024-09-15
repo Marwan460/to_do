@@ -11,19 +11,18 @@ import '../../../../../model/user_dm.dart';
 class Todo extends StatefulWidget {
   final TodoDM? task;
   final UserDM? userDM;
+  Function(String) delete;
 
-  const Todo({
-    super.key,
+  Todo({super.key,
     required this.task,
-    this.userDM,
-  });
+    this.userDM, required this.delete});
 
   @override
   State<Todo> createState() => _TodoState();
 }
 
 class _TodoState extends State<Todo> {
-  CrossFadeState crossFadeState = CrossFadeState.showFirst;
+  List<TodoDM> todosList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +30,7 @@ class _TodoState extends State<Todo> {
       startActionPane: ActionPane(motion: const BehindMotion(), children: [
         GestureDetector(
           onTap: () {
-            deleteTask(widget.task!.taskId);
+            widget.delete.call(widget.task!.taskId);
           },
           child: Container(
               padding: const EdgeInsets.all(8),
@@ -55,7 +54,8 @@ class _TodoState extends State<Todo> {
       endActionPane: ActionPane(motion: const BehindMotion(), children: [
         GestureDetector(
           onTap: () {
-            Navigator.of(context).pushNamed(EditTask.routeName);
+            Navigator.of(context)
+                .pushNamed(EditTask.routeName, arguments: widget.task);
           },
           child: Container(
               padding: const EdgeInsets.all(8),
@@ -169,14 +169,4 @@ class _TodoState extends State<Todo> {
     setState(() {});
   }
 
-  Future<void> deleteTask(String taskId) async {
-    CollectionReference taskCollection = FirebaseFirestore.instance
-        .collection(UserDM.collectionName)
-        .doc(UserDM.currentUser!.userId)
-        .collection(TodoDM.collectionName);
-    var taskDoc = taskCollection.doc(taskId);
-    await taskDoc.delete();
-    TodoDao.getTodosListFromFireStore();
-    setState(() {});
-  }
 }

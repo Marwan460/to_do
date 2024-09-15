@@ -15,7 +15,7 @@ class TodoDM {
       this.isDone = false,
       required this.date});
 
-  TodoDM.fromJson(Map<String, dynamic> json){
+  TodoDM.fromJson(Map<String, dynamic> json) {
     taskId = json["id"];
     title = json["title"];
     description = json["description"];
@@ -24,11 +24,13 @@ class TodoDM {
     isDone = json["isDone"];
   }
 
-  Map<String, dynamic> toJason () => {
-        "id": taskId,
-        "title": title,
-    "description": description,
-    "date": date,
-    "isDone": isDone,
-  };
+  Map<String, dynamic> toJason() {
+    return {
+      "id": taskId,
+      "title": title,
+      "description": description,
+      "date": date,
+      "isDone": isDone,
+    };
+  }
 }
