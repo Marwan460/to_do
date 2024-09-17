@@ -1,7 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:todo/model/todo_dm.dart';
-import 'package:todo/model/user_dm.dart';
 import 'package:todo/ui/utils/date_time_extension.dart';
 import 'package:todo/ui/utils/todo_dao.dart';
 import '../../utils/app_style.dart';
@@ -59,7 +56,7 @@ class _AddBottomSheetState extends State<AddBottomSheet> {
           const SizedBox(height: 10),
           InkWell(
             onTap: () {
-              TodoDao.showMyDatePicker(context);
+              showMyDatePicker();
             },
             child: Text(
               selectedDate.toFormattedDate,
@@ -80,4 +77,13 @@ class _AddBottomSheetState extends State<AddBottomSheet> {
     );
   }
 
+  Future<void> showMyDatePicker() async {
+    selectedDate = await showDatePicker(
+            context: context,
+            initialDate: selectedDate,
+            firstDate: DateTime.now(),
+            lastDate: DateTime.now().add(const Duration(days: 365))) ??
+        selectedDate;
+    setState(() {});
+  }
 }

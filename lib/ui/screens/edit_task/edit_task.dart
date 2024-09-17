@@ -1,12 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:todo/ui/screens/home/tabs/setting.dart';
 import 'package:todo/ui/utils/app_colors.dart';
 import 'package:todo/ui/utils/date_time_extension.dart';
-import 'package:todo/ui/utils/todo_dao.dart';
-
 import '../../../model/todo_dm.dart';
 import '../../../model/user_dm.dart';
 import '../../utils/app_style.dart';
+import '../home/tabs/list/list_tab.dart';
 
 class EditTask extends StatefulWidget {
   static const String routeName = "editTask";
@@ -25,6 +24,8 @@ class _EditTaskState extends State<EditTask> {
   DateTime selectedDate = DateTime.now();
   TextEditingController titleController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
+  GlobalKey<ListTabState> listTabKey = GlobalKey();
+  List<Widget> tabs = [];
 
   @override
   void initState() {
@@ -35,6 +36,12 @@ class _EditTaskState extends State<EditTask> {
       selectedDate = taskModel.date;
     });
     super.initState();
+    tabs = [
+      ListTab(
+        key: listTabKey,
+      ),
+      const Setting()
+    ];
   }
 
   @override
@@ -93,7 +100,7 @@ class _EditTaskState extends State<EditTask> {
                       const SizedBox(height: 30),
                       InkWell(
                         onTap: () {
-                          TodoDao.showMyDatePicker(context);
+                          showMyDatePicker();
                         },
                         child: Text(
                           selectedDate.toFormattedDate,
@@ -105,9 +112,14 @@ class _EditTaskState extends State<EditTask> {
                         height: 100,
                       ),
                       ElevatedButton(
-                          onPressed: () {
-                            editTask();
-                            setState(() {});
+                          onPressed: () async {
+                            widget.task?.title = titleController.text;
+                            widget.task?.description =
+                                descriptionController.text;
+                            widget.task?.date = selectedDate;
+                            await listTabKey.currentState
+                                ?.getTodosListFromFireStore();
+                            Navigator.pop(context);
                           },
                           style: ButtonStyle(
                             shape: WidgetStateProperty.all(
@@ -124,13 +136,23 @@ class _EditTaskState extends State<EditTask> {
     );
   }
 
-  Future<void> editTask() async {
-    CollectionReference todoCollection = FirebaseFirestore.instance
-        .collection(UserDM.collectionName)
-        .doc(UserDM.currentUser!.userId)
-        .collection(TodoDM.collectionName);
-    var taskDoc = todoCollection.doc(widget.task?.taskId);
-    await taskDoc.update(widget.task?.toJason());
-    print("taskdoc:$taskDoc");
+  Future<void> showMyDatePicker() async {
+    selectedDate = await showDatePicker(
+            context: context,
+            initialDate: selectedDate,
+            firstDate: DateTime.now(),
+            lastDate: DateTime.now().add(const Duration(days: 365))) ??
+        selectedDate;
+    setState(() {});
   }
+
+// Future<void> editTask() async {
+//   CollectionReference todoCollection = FirebaseFirestore.instance
+//       .collection(UserDM.collectionName)
+//       .doc(UserDM.currentUser!.userId)
+//       .collection(TodoDM.collectionName);
+//   var taskDoc = todoCollection.doc(widget.task?.taskId);
+//   await taskDoc.update(widget.task?.toJason());
+//   print("taskdoc:$taskDoc");
+// }
 }

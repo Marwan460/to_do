@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:todo/model/todo_dm.dart';
 import 'package:todo/ui/screens/edit_task/edit_task.dart';
 import 'package:todo/ui/utils/app_colors.dart';
 import 'package:todo/ui/utils/app_style.dart';
-import 'package:todo/ui/utils/todo_dao.dart';
 import '../../../../../model/user_dm.dart';
 
 class Todo extends StatefulWidget {
@@ -13,24 +13,63 @@ class Todo extends StatefulWidget {
   final UserDM? userDM;
   Function(String) delete;
 
-  Todo({super.key,
-    required this.task,
-    this.userDM, required this.delete});
+  Todo({super.key, required this.task, this.userDM, required this.delete});
 
   @override
   State<Todo> createState() => _TodoState();
 }
 
-class _TodoState extends State<Todo> {
+class _TodoState extends State<Todo> with SingleTickerProviderStateMixin {
   List<TodoDM> todosList = [];
+  late SlidableController slidableController;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    slidableController = SlidableController(this);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Slidable(
+      controller: slidableController,
       startActionPane: ActionPane(motion: const BehindMotion(), children: [
         GestureDetector(
           onTap: () {
             widget.delete.call(widget.task!.taskId);
+            slidableController.close();
+            showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) {
+                  return CupertinoAlertDialog(
+                    title: const Text("Task Deleted"),
+                    content:
+                        const Text("The task has been successfully deleted."),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('OK'))
+                    ],
+                  );
+                });
+            // showDialog(context: context, builder: (BuildContext context){
+            //   return  AlertDialog(
+            //     title: const Text("Task Deleted"),
+            //     content: const Text("The task has been successfully deleted."),
+            //     actions: [
+            //       TextButton(
+            //         child: const Text('OK'),
+            //         onPressed: () {
+            //           Navigator.of(context).pop();
+            //         },
+            //       ),
+            //     ],
+            //   );
+            // });
           },
           child: Container(
               padding: const EdgeInsets.all(8),
@@ -168,5 +207,4 @@ class _TodoState extends State<Todo> {
     await taskDoc.update({"isDone": widget.task!.isDone!});
     setState(() {});
   }
-
 }

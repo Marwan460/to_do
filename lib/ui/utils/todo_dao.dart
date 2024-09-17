@@ -6,17 +6,7 @@ import '../../model/user_dm.dart';
 abstract class TodoDao {
   TodoDao();
 
-  static Future<void> showMyDatePicker(BuildContext context) async {
-    DateTime selectedDate = DateTime.now();
-    selectedDate = await showDatePicker(
-            context: context,
-            initialDate: selectedDate,
-            firstDate: DateTime.now(),
-            lastDate: DateTime.now().add(const Duration(days: 365))) ??
-        selectedDate;
-  }
-
-  static void addTodoToFireStore(
+  static addTodoToFireStore(
       BuildContext context,
       TextEditingController titleController,
       TextEditingController descriptionController) {
